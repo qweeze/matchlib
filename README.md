@@ -2,7 +2,11 @@
 This package provides a handy way to partially compare python data structures 
 (typically nested lists/dictionaries).
 
-#### Usage
+### Installation
+```bash
+pip install matchlib
+```
+### Usage
 ```python
 from matchlib import matches
 
@@ -45,7 +49,7 @@ assert user == Partial({
 assert list(range(10)) == Partial([0, 1, ..., 5, 6, 7, ...])
 ```
 The `...` "wildcard" could be placed at any nested level. 
-Let's say we only need to check that comment `142` is present is specific post: 
+Let's say we only need to check that comment `142` is present in specific post: 
 ```python 
 assert user == Partial({
     'posts': [
@@ -59,7 +63,7 @@ assert user == Partial({
     ...: ...
 })
 ``` 
-#### Some more hacks
+### Some more hacks
 `mathchlib` provides a `Regex` object that allows to match an arbitrary string element 
 (except if it is a dict key) against a regular expression.
 Also `pytest.approx` is supported for floating-point numbers comparison:
