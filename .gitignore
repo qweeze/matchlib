@@ -1,0 +1,10 @@
+__pycache__
+.git
+.cache
+.idea
+.vscode
+dist/
+
+*.py[cod]
+venv/
+*.egg-info
