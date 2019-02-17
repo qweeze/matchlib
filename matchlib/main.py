@@ -1,28 +1,33 @@
 import re
+from typing import Union
 
 
-def matches(obj, pattern):
-    if isinstance(pattern, dict) and isinstance(obj, dict):
-        if ... in pattern:
-            keys = set(pattern) - {...}
+def matches(obj: Union[dict, list], partial: Union[dict, list]) -> bool:
+    """Matches a given object against another
+    which can contain "wildcard" elements (`...`)
+    :return: bool
+    """
+    if isinstance(partial, dict) and isinstance(obj, dict):
+        if ... in partial:
+            keys = set(partial) - {...}
         else:
-            keys = set(pattern) | set(obj)
+            keys = set(partial) | set(obj)
         for k in keys:
-            if k not in pattern or k not in obj:
+            if k not in partial or k not in obj:
                 return False
-            if pattern[k] is ...:
+            if partial[k] is ...:
                 continue
-            if not matches(obj[k], pattern[k]):
+            if not matches(obj[k], partial[k]):
                 return False
 
         return True
 
-    elif isinstance(pattern, list) and isinstance(obj, list):
+    elif isinstance(partial, list) and isinstance(obj, list):
         obj_idx = 0
         skip = False
-        for idx, el in enumerate(pattern):
+        for idx, el in enumerate(partial):
             if el is ...:
-                if idx == len(pattern) - 1:
+                if idx == len(partial) - 1:
                     return True
                 skip = True
                 continue
@@ -43,11 +48,11 @@ def matches(obj, pattern):
 
         return True
 
-    return pattern == obj
+    return partial == obj
 
 
 class Partial:
-    def __init__(self, obj):
+    def __init__(self, obj: Union[dict, list]):
         self.obj = obj
 
     def __eq__(self, other):
@@ -66,3 +71,6 @@ class Regex:
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+
+Any = ...

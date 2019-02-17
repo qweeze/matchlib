@@ -1,4 +1,4 @@
-from matchlib import matches, Partial, Regex
+from matchlib import matches, Partial, Regex, Any
 
 
 def test_simple():
@@ -23,6 +23,10 @@ def test_simple():
     assert matches([1, 2, 3], [..., 2, 3])
     assert matches([1, 2, 3], [1, 2, ...])
     assert matches([1, 2, 3], [1, ..., 3])
+
+    assert matches([1, 2, 3], [Any, 2, 3])
+    assert matches([1, 2, 3], [1, 2, Any])
+    assert matches([1, 2, 3], [1, Any, 3])
 
     assert matches([1, 2, 3, 4, 5], [1, ..., 5])
     assert matches([1, 2, 3, 4, 5], [1, 2, ..., 4, 5])
