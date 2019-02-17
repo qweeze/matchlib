@@ -1,4 +1,7 @@
 ## matchlib
+
+[![PyPI version](https://badge.fury.io/py/matchlib.svg)](https://badge.fury.io/py/matchlib)
+
 This package provides a handy way to partially compare python data structures 
 (typically nested lists/dictionaries).
 
