@@ -292,3 +292,57 @@ def test_nested_negative():
         },
         {}
     ])
+
+
+def test_sets():
+    assert matches(set(), set())
+    assert matches({1, 2, 3}, {1, ..., 3})
+    assert matches({1, 2, 3}, {1, ...})
+    assert matches({1, 2, 3}, {...})
+
+    assert not matches({1, 2, 3}, set())
+    assert not matches({1, 2, 3}, {0, 1, 2, ...})
+
+
+def test_dict_values():
+    obj = {
+        'id': 42,
+        'name': 'John Doe',
+        'email': 'john@gmail.com',
+    }
+
+    assert obj == Partial({
+        ...: 42,
+        'name': 'John Doe',
+        'email': 'john@gmail.com',
+    })
+
+    assert obj == Partial({
+        'id': 42,
+        'name': 'John Doe',
+        ...: 'john@gmail.com',
+    })
+
+    assert obj != Partial({
+        'id': 42,
+        ...: 'john@gmail.com',
+    })
+
+    assert obj != Partial({
+        'id': 42,
+        'name': 'John Doe',
+        'posts': [1, 2, 3],
+        ...: 'john@gmail.com',
+    })
+
+    assert obj == Partial({
+        'id': 42,
+        'name': ...,
+        ...: 'john@gmail.com',
+    })
+
+    assert obj == Partial({
+        'id': ...,
+        'name': ...,
+        'email': 'john@gmail.com',
+    })

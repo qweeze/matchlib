@@ -46,10 +46,9 @@ from matchlib import Partial
 
 assert user == Partial({
     'id': 42,
+    'email': 'johndoe@gmail.com',
     ...: ...
 })
-
-assert list(range(10)) == Partial([0, 1, ..., 5, 6, 7, ...])
 ```
 The `...` "wildcard" could be placed at any nested level. 
 Let's say we only need to check that comment `142` is present in specific post: 
@@ -66,6 +65,35 @@ assert user == Partial({
     ...: ...
 })
 ``` 
+Matching rules are simple:
+ - In __lists__ and __tuples__ `...` matches zero or more elements and order is preserved:
+    ```python
+    Partial([1, 2, ...]) == [1, 2, 3, 4]
+    Partial([1, 2, ...]) == [1, 2]
+    
+    Partial([1, 2, ...]) != [0, 1, 2]
+    Partial([1, 2, ...]) != [2, 1]
+    ```
+ - Same for the __sets__ except they are unordered:
+    ```python
+    Partial({1, 2, ...}) == {1, 2}
+    Partial({1, 2, ...}) == {0, 1, 2, 3}
+ 
+    Partial({1, 2, ...}) != {0, 1, 3}
+    ```
+ - As __dict value__ `...` matches any object:
+    ```python
+    Partial({'a': 1, 'b': ...}) == {'a': 1, 'b': 2}
+    ```
+ - As __dict key__ `...` matches any key if assosiated values match:
+    ```python
+    Partial({'a': 1, ...: 2}) == {'a': 2, 'b': 2}
+    ``` 
+ - When passed as __both key and value__ matches zero or more arbitrary key-value pairs:
+    ```python
+    Partial({'a': 1, ...: ...}) == {'a': 1, 'b': 2, 'c': 3}
+    ```
+
 ### Some more hacks
 `mathchlib` provides a `Regex` object that allows to match an arbitrary string element 
 (except if it is a dict key) against a regular expression.

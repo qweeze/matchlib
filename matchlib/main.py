@@ -2,7 +2,10 @@ import re
 from typing import Union
 
 
-def matches(obj: Union[dict, list], partial: Union[dict, list]) -> bool:
+Matchable = Union[dict, list, set, tuple]
+
+
+def matches(obj: Matchable, partial: Matchable) -> bool:
     """Matches a given object against another
     which can contain "wildcard" elements (`...`)
     :return: bool
@@ -20,9 +23,25 @@ def matches(obj: Union[dict, list], partial: Union[dict, list]) -> bool:
             if not matches(obj[k], partial[k]):
                 return False
 
+        if ... in partial and partial[...] is not ...:
+            remaining = set(obj) - set(partial) - {...}
+            if len(remaining) != 1:
+                return False
+
+            return matches(obj[remaining.pop()], partial[...])
+
         return True
 
-    elif isinstance(partial, list) and isinstance(obj, list):
+    elif isinstance(partial, set) and isinstance(obj, set):
+        if ... in partial:
+            return (partial - {...}).issubset(obj)
+        else:
+            return partial == obj
+
+    elif (
+        (isinstance(partial, list) and isinstance(obj, list)) or
+        (isinstance(partial, tuple) and isinstance(obj, tuple))
+    ):
         obj_idx = 0
         skip = False
         for idx, el in enumerate(partial):
