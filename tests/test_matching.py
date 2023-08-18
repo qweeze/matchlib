@@ -32,6 +32,15 @@ def test_simple():
     assert matches([1, 2, 3, 4, 5], [1, 2, ..., 4, 5])
     assert matches([1, 2, 3, 4, 5], [1, 2, 3, ..., 4, 5])
 
+    assert matches([1, 1, 2], [..., 1, 2])
+    assert matches([1, 1, 1], [..., 1, ...])
+    assert matches([1, 1, 1], [1, ..., 1])
+    assert matches([1, 1, 1], [...])
+
+    assert matches([1, 2, 3, 4, 5], [1, 2, 3, ..., 4, ...])
+    assert matches([1, 2, 3, 4, 5], [1, 2, ..., 4, ..., 5])
+    assert matches([1, 2, 3, 4, 5], [..., 1, 2, ..., 5])
+    assert matches([1, 2, 3, 4, 5], [..., 2, 3, ...])
 
 def test_simple_negative():
     assert not matches([], [42])
@@ -77,6 +86,14 @@ def test_simple_negative():
     assert not matches([1, 2, 3, 4, 5], [1, 2, 3, 4, ..., 4, 5])
     assert not matches([1, 2, 3, 4, 5], [1, 2, 3, ..., 4, 4, 5])
 
+    assert not matches([1, 2, 3, 4, 5], [1, 2, 3, ..., 6, ...])
+    assert not matches([1, 2, 3, 4, 5], [1, 2, ..., 4, ..., 5, 5])
+    assert not matches([1, 2, 3, 4, 5], [..., 1, 1, 2, ..., 5])
+    assert not matches([1, 2, 3, 4, 5], [..., 2, 3, 3, ...])
+
+    assert not matches([1, 1, 2], [..., 1, 2, 2])
+    assert not matches([1, 1, 1], [..., 1, 1, ..., 1, 1])
+    assert not matches([1, 1, 1], [1, 1, ..., 1, 1])
 
 def test_multiple():
     assert matches([1, 3, 5], [..., ..., ..., 5])

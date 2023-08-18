@@ -43,26 +43,23 @@ def matches(obj: Matchable, partial: Matchable) -> bool:
         (isinstance(partial, tuple) and isinstance(obj, tuple))
     ):
         obj_idx = 0
-        skip = False
         for idx, el in enumerate(partial):
             if el is ...:
                 if idx == len(partial) - 1:
                     return True
-                skip = True
-                continue
-            if skip:
-                while not matches(obj[obj_idx], el):
-                    if obj_idx == len(obj) - 1:
-                        return False
-                    obj_idx += 1
-                skip = False
+
+                for i2 in range(obj_idx, len(obj)):
+                    if matches(obj[i2:], partial[idx + 1:]):
+                        return True
+
+                return False
 
             if obj_idx >= len(obj) or not matches(obj[obj_idx], el):
                 return False
 
             obj_idx += 1
 
-        if not skip and obj_idx != len(obj):
+        if obj_idx != len(obj):
             return False
 
         return True

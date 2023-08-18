@@ -6,7 +6,7 @@ setup(
     name='matchlib',
     author='qweeze',
     author_email='qweeeze@gmail.com',
-    version='0.2.1',
+    version='0.2.2',
     description='A tool for partial comparison of (nested) data structures',
     long_description=(pathlib.Path(__file__).parent / 'README.md').read_text(),
     long_description_content_type='text/markdown',
