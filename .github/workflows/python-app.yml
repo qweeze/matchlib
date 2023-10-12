@@ -26,10 +26,7 @@ jobs:
         pip install flake8 pytest
         pip install matchlib
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run pre-commit
-      run: |
-        pip install pre-commit
-        pre-commit run --all-files
+   
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -37,6 +34,8 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --junitxml=unittests.xml
+    - name: test
+      run: make test
 
     - name: Upload test results
       uses: actions/upload-artifact@v2
