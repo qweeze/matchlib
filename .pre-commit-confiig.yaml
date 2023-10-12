@@ -1,44 +1,59 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v4.4.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: debug-statements
-    -   id: double-quote-string-fixer
-    -   id: name-tests-test
-    -   id: requirements-txt-fixer
--   repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.5.0
+      - id: check-added-large-files
+      - id: check-ast
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: 'https://github.com/psf/black'
+    rev: 23.9.1
     hooks:
-    -   id: setup-cfg-fmt
--   repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.12.0
-    hooks:
-    -   id: reorder-python-imports
-        exclude: ^(pre_commit/resources/|testing/resources/python3_hooks_repo/)
-        args: [--py38-plus, --add-import, 'from __future__ import annotations']
--   repo: https://github.com/asottile/add-trailing-comma
-    rev: v3.1.0
-    hooks:
-    -   id: add-trailing-comma
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
-    hooks:
-    -   id: pyupgrade
-        args: [--py38-plus]
--   repo: https://github.com/hhatto/autopep8
-    rev: v2.0.4
-    hooks:
-    -   id: autopep8
--   repo: https://github.com/PyCQA/flake8
+      - id: black
+        stages: [commit]
+  - repo: 'https://github.com/PyCQA/flake8'
     rev: 6.1.0
     hooks:
-    -   id: flake8
--   repo: https://github.com/pre-commit/mirrors-mypy
+      - id: flake8
+        stages: [commit]
+        additional_dependencies: [flake8-bugbear]
+  - repo: 'https://github.com/PyCQA/isort'
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        stages: [commit]
+  - repo: 'https://github.com/pycqa/pydocstyle'
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        args:
+          - '--convention=google'
+          - '--add-ignore=D100,D101,D102,D103,D104,D105,D106,D107'
+        stages: [commit]
+  - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
     hooks:
-    -   id: mypy
-        additional_dependencies: [types-all]
-        exclude: ^testing/resources/
+      - id: mypy
+        stages: [commit]
+        additional_dependencies: ['types-requests', 'types-PyYAML']
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
+    rev: v1.0.5
+    hooks:
+      - id: python-bandit-vulnerability-check
+        stages: [commit]
+#  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+#    rev: v1.3.2
+#    hooks:
+#      - id: python-safety-dependencies-check
+#        stages: [commit]
+#        files: pyproject.toml
+#        args: ["--disable-telemetry"]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        stages: [push]
+        language: system
+        entry: pytest -v --showlocals
+        types: [python]
+        pass_filenames: false
