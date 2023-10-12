@@ -34,8 +34,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --junitxml=unittests.xml
-    - name: test
-      run: make test
+   
 
     - name: Upload test results
       uses: actions/upload-artifact@v2
