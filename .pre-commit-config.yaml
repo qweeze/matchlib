@@ -10,18 +10,15 @@ repos:
     rev: 23.9.1
     hooks:
       - id: black
-        stages: [commit]
   - repo: 'https://github.com/PyCQA/flake8'
     rev: 6.1.0
     hooks:
       - id: flake8
-        stages: [commit]
         additional_dependencies: [flake8-bugbear]
   - repo: 'https://github.com/PyCQA/isort'
     rev: 5.12.0
     hooks:
       - id: isort
-        stages: [commit]
   - repo: 'https://github.com/pycqa/pydocstyle'
     rev: 6.3.0
     hooks:
@@ -29,31 +26,21 @@ repos:
         args:
           - '--convention=google'
           - '--add-ignore=D100,D101,D102,D103,D104,D105,D106,D107'
-        stages: [commit]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.1
     hooks:
       - id: mypy
-        stages: [commit]
         additional_dependencies: ['types-requests', 'types-PyYAML']
   - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
     rev: v1.0.5
     hooks:
       - id: python-bandit-vulnerability-check
-        stages: [commit]
-#  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-#    rev: v1.3.2
-#    hooks:
-#      - id: python-safety-dependencies-check
-#        stages: [commit]
-#        files: pyproject.toml
-#        args: ["--disable-telemetry"]
-  - repo: local
+
+# Local Hooks
+-   repo: local
     hooks:
-      - id: pytest
-        name: pytest
-        stages: [push]
-        language: system
-        entry: pytest -v --showlocals
-        types: [python]
-        pass_filenames: false
+      -   id: pytest
+          name: pytest
+          stages: [push]
+          entry: pytest --junitxml=unittests.xml
+          types: [python]
