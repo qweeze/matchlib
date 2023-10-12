@@ -36,11 +36,11 @@ repos:
     hooks:
       - id: python-bandit-vulnerability-check
 
-# Local Hooks
--   repo: local
+  # Local Hooks
+  - repo: local
     hooks:
-      -   id: pytest
-          name: pytest
-          stages: [push]
-          entry: pytest --junitxml=unittests.xml
-          types: [python]
+      - id: pytest
+        name: pytest
+        stages: [push]
+        entry: pytest --junitxml=unittests.xml
+        types: [python]
