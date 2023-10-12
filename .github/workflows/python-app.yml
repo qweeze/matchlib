@@ -44,12 +44,10 @@ jobs:
         name: test-results
         path: unittests.xml
 
-    - name: Build Python package distribution
-      run: |
-        python setup.py sdist
-        python setup.py bdist_wheel
-
+    - name: Build package
+      run: python -m build
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
