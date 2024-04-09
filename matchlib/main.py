@@ -1,8 +1,8 @@
 import re
-from typing import Union
+import typing as t
 
 
-Matchable = Union[dict, list, set, tuple]
+Matchable = t.Union[t.Dict[t.Any, t.Any], t.List[t.Any], t.Set[t.Any], t.Tuple[t.Any]]
 
 
 def matches(obj: Matchable, partial: Matchable) -> bool:
@@ -67,24 +67,28 @@ def matches(obj: Matchable, partial: Matchable) -> bool:
 
 
 class Partial:
-    def __init__(self, obj: Union[dict, list]):
+    def __init__(self, obj: t.Union[t.Dict[t.Any, t.Any], t.List[t.Any]]) -> None:
         self.obj = obj
 
-    def __eq__(self, other):
-        return matches(other, self.obj)
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, (dict, list, set, tuple)):
+            return matches(other, self.obj)
+        return super().__eq__(other)
 
-    def __ne__(self, other):
-        return not matches(other, self.obj)
+    def __ne__(self, other: object) -> bool:
+        if isinstance(other, (dict, list, set, tuple)):
+            return not matches(other, self.obj)
+        return super().__ne__(other)
 
 
 class Regex:
-    def __init__(self, pattern, flags=0):
+    def __init__(self, pattern: str, flags: int = 0) -> None:
         self._regex = re.compile(pattern, flags=flags)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, str) and self._regex.match(other) is not None
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)
 
 
