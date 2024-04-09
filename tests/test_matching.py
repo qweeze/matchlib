@@ -8,17 +8,17 @@ def test_simple():
     assert matches(False, False)
     assert matches(True, True)
     assert matches(42, 42)
-    assert matches('abc', 'abc')
+    assert matches("abc", "abc")
 
     assert matches([1, 2, 3], [1, 2, 3])
-    assert matches({'a': 1, 'b': 2}, {'a': 1, 'b': 2})
+    assert matches({"a": 1, "b": 2}, {"a": 1, "b": 2})
 
-    assert matches({'a': 1, 'b': 2}, {...: ...})
-    assert matches({'a': 1, 'b': 2}, {'a': 1, 'b': ...})
-    assert matches({'a': 1, 'b': 2}, {'a': 1, ...: ...})
-    assert matches({'a': 1, 'b': 2, 'c': 3}, {'a': 1, ...: ...})
-    assert matches({'a': 1, 'b': 2, 'c': 3}, {'a': 1, 'c': 3, ...: ...})
-    assert matches({'a': 1, 'b': 2, 'c': 3}, {'a': ..., 'c': 3, ...: ...})
+    assert matches({"a": 1, "b": 2}, {...: ...})
+    assert matches({"a": 1, "b": 2}, {"a": 1, "b": ...})
+    assert matches({"a": 1, "b": 2}, {"a": 1, ...: ...})
+    assert matches({"a": 1, "b": 2, "c": 3}, {"a": 1, ...: ...})
+    assert matches({"a": 1, "b": 2, "c": 3}, {"a": 1, "c": 3, ...: ...})
+    assert matches({"a": 1, "b": 2, "c": 3}, {"a": ..., "c": 3, ...: ...})
 
     assert matches([1, 2, 3], [..., 2, 3])
     assert matches([1, 2, 3], [1, 2, ...])
@@ -42,30 +42,31 @@ def test_simple():
     assert matches([1, 2, 3, 4, 5], [..., 1, 2, ..., 5])
     assert matches([1, 2, 3, 4, 5], [..., 2, 3, ...])
 
+
 def test_simple_negative():
     assert not matches([], [42])
     assert not matches([42], [])
-    assert not matches({'a': 1}, {})
-    assert not matches({}, {'a': 1})
+    assert not matches({"a": 1}, {})
+    assert not matches({}, {"a": 1})
     assert not matches(None, 42)
     assert not matches(42, None)
     assert not matches(False, True)
     assert not matches(True, False)
     assert not matches(42, 43)
-    assert not matches('abc', 'abcd')
+    assert not matches("abc", "abcd")
 
     assert not matches([1, 2, 3], [1, 2, 3, 4])
     assert not matches([1, 2, 3, 4], [1, 2, 3])
-    assert not matches({'a': 1, 'b': 2}, {'a': 1, 'b': 42})
-    assert not matches({'a': 1, 'c': 2}, {'a': 1, 'b': 2})
-    assert not matches({'a': 1, 'b': 42}, {'a': 1, 'b': 2})
+    assert not matches({"a": 1, "b": 2}, {"a": 1, "b": 42})
+    assert not matches({"a": 1, "c": 2}, {"a": 1, "b": 2})
+    assert not matches({"a": 1, "b": 42}, {"a": 1, "b": 2})
 
-    assert not matches({'a': 1, 'b': 2}, {'a': 1, 'c': ...})
-    assert not matches({'a': 1, 'b': 2}, {'a': 2, ...: ...})
-    assert not matches({'a': 2, 'b': 2}, {'a': 1, ...: ...})
-    assert not matches({'a': 1, 'b': 2, 'c': 3}, {'a': 1, ...: ..., 'c': 4})
-    assert not matches({'a': 1, 'b': 2, 'c': 4}, {'a': 1, 'c': 3, ...: ...})
-    assert not matches({'a': 1, 'b': 2, 'c': 3}, {'a': ..., 'c': 4, ...: ...})
+    assert not matches({"a": 1, "b": 2}, {"a": 1, "c": ...})
+    assert not matches({"a": 1, "b": 2}, {"a": 2, ...: ...})
+    assert not matches({"a": 2, "b": 2}, {"a": 1, ...: ...})
+    assert not matches({"a": 1, "b": 2, "c": 3}, {"a": 1, ...: ..., "c": 4})
+    assert not matches({"a": 1, "b": 2, "c": 4}, {"a": 1, "c": 3, ...: ...})
+    assert not matches({"a": 1, "b": 2, "c": 3}, {"a": ..., "c": 4, ...: ...})
 
     assert not matches([1, 2, 3], [..., 2, 3, 4])
     assert not matches([1, 2, 3], [..., 2, 4, 3])
@@ -95,6 +96,7 @@ def test_simple_negative():
     assert not matches([1, 1, 1], [..., 1, 1, ..., 1, 1])
     assert not matches([1, 1, 1], [1, 1, ..., 1, 1])
 
+
 def test_multiple():
     assert matches([1, 3, 5], [..., ..., ..., 5])
     assert not matches([1, 3, 5], [..., ..., ..., 4])
@@ -121,194 +123,144 @@ def test_multiple():
 def test_nested():
 
     obj = {
-        'id': 42,
-        'name': 'John Doe',
-        'email': 'john@gmail.com',
-        'posts': [
+        "id": 42,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "posts": [
             {
-                'id': 1,
-                'text': 'some text',
+                "id": 1,
+                "text": "some text",
             },
             {
-                'id': 13,
-                'text': 'Lorem Ipsum...',
-                'likes': [42, 142, 242],
-            }
-        ]
-
+                "id": 13,
+                "text": "Lorem Ipsum...",
+                "likes": [42, 142, 242],
+            },
+        ],
     }
 
     assert matches(
         obj,
-        {
-            'name': 'John Doe',
-            'posts': [...],
-            ...: ...
-        },
+        {"name": "John Doe", "posts": [...], ...: ...},
     )
 
-    assert obj == Partial({
-        'name': 'John Doe',
-        'posts': [...],
-        ...: ...
-    })
+    assert obj == Partial({"name": "John Doe", "posts": [...], ...: ...})
 
-    assert obj == Partial({
-        'name': 'John Doe',
-        'posts': [
-            ...,
-            {
-                ...: ...,
-                'likes': [..., 142, ...]
-            },
-            ...
-        ],
-        ...: ...
-    })
-
-    assert obj == Partial({
-        'id': ...,
-        'name': 'John Doe',
-        'email': Regex(r'\w+@gmail.com'),
-        'posts': [...],
-    })
-
-    assert obj == Partial({
-        'id': ...,
-        'name': 'John Doe',
-        'email': Regex(r'\w+@gmail.com'),
-        'posts': [
-            {
-                'id': ...,
-                'text': 'some text',
-            },
-            ...
-        ],
-    })
-
-    assert obj == Partial({
-        'id': 42,
-        ...: ...,
-        'posts': [
-            {
-                'id': 1,
-                ...: ...
-            },
-            {
-                'text': Regex(r'Lorem \w+'),
-                ...: ...
-            }
-        ],
-    })
-
-    assert [obj] == Partial([{
-        'name': 'John Doe',
-        'posts': [...],
-        ...: ...
-    }])
-
-    assert [obj, {}] == Partial([
+    assert obj == Partial(
         {
-            'name': 'John Doe',
-            'posts': [...],
-            ...: ...
-        },
-        ...
-    ])
+            "name": "John Doe",
+            "posts": [..., {...: ..., "likes": [..., 142, ...]}, ...],
+            ...: ...,
+        }
+    )
+
+    assert obj == Partial(
+        {
+            "id": ...,
+            "name": "John Doe",
+            "email": Regex(r"\w+@gmail.com"),
+            "posts": [...],
+        }
+    )
+
+    assert obj == Partial(
+        {
+            "id": ...,
+            "name": "John Doe",
+            "email": Regex(r"\w+@gmail.com"),
+            "posts": [
+                {
+                    "id": ...,
+                    "text": "some text",
+                },
+                ...,
+            ],
+        }
+    )
+
+    assert obj == Partial(
+        {
+            "id": 42,
+            ...: ...,
+            "posts": [{"id": 1, ...: ...}, {"text": Regex(r"Lorem \w+"), ...: ...}],
+        }
+    )
+
+    assert [obj] == Partial([{"name": "John Doe", "posts": [...], ...: ...}])
+
+    assert [obj, {}] == Partial([{"name": "John Doe", "posts": [...], ...: ...}, ...])
 
 
 def test_nested_negative():
 
     obj = {
-        'id': 42,
-        'name': 'John Doe',
-        'email': 'john@gmail.com',
-        'posts': [
+        "id": 42,
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "posts": [
             {
-                'id': 1,
-                'text': 'some text',
+                "id": 1,
+                "text": "some text",
             },
             {
-                'id': 13,
-                'text': 'Lorem Ipsum...',
-                'likes': [42, 142, 242],
-            }
-        ]
-
+                "id": 13,
+                "text": "Lorem Ipsum...",
+                "likes": [42, 142, 242],
+            },
+        ],
     }
 
-    assert obj != Partial({
-        'id': ...,
-        'name': 'John Doe',
-        'email': Regex(r'\w+@gmail.com'),
-        'posts': [
-            {
-                'id': ...,
-                'text': 'some text',
-            },
-        ],
-    })
-
-    assert obj != Partial({
-        'email': Regex(r'\w+@gmail.com'),
-        'posts': {...: ...},
-    })
-
-    assert obj != Partial({
-        'email': Regex(r'mail.org'),
-        ...: ...
-    })
-
-    assert obj != Partial({
-        'name': 'John Doe',
-        'posts': [
-            {
-                ...: ...,
-                'likes': [..., 142, ...]
-            },
-        ],
-        ...: ...
-    })
-
-    assert obj != Partial({
-        'name': 'John Doe',
-        'posts': [
-            ...,
-            {
-                ...: ...,
-                'likes': [..., 142, ...]
-            },
-            ...
-        ],
-    })
-
-    assert obj != Partial({
-        'name': 'John Doe',
-        'posts': [
-            ...,
-            {
-                ...: ...,
-                'likes': [142, ...]
-            },
-            ...
-        ],
-        ...: ...
-    })
-
-    assert [obj, {}] != Partial([{
-        'name': 'John Doe',
-        'posts': [...],
-        ...: ...
-    }])
-
-    assert [obj] != Partial([
+    assert obj != Partial(
         {
-            'name': 'John Doe',
-            'posts': [...],
-            ...: ...
-        },
-        {}
-    ])
+            "id": ...,
+            "name": "John Doe",
+            "email": Regex(r"\w+@gmail.com"),
+            "posts": [
+                {
+                    "id": ...,
+                    "text": "some text",
+                },
+            ],
+        }
+    )
+
+    assert obj != Partial(
+        {
+            "email": Regex(r"\w+@gmail.com"),
+            "posts": {...: ...},
+        }
+    )
+
+    assert obj != Partial({"email": Regex(r"mail.org"), ...: ...})
+
+    assert obj != Partial(
+        {
+            "name": "John Doe",
+            "posts": [
+                {...: ..., "likes": [..., 142, ...]},
+            ],
+            ...: ...,
+        }
+    )
+
+    assert obj != Partial(
+        {
+            "name": "John Doe",
+            "posts": [..., {...: ..., "likes": [..., 142, ...]}, ...],
+        }
+    )
+
+    assert obj != Partial(
+        {
+            "name": "John Doe",
+            "posts": [..., {...: ..., "likes": [142, ...]}, ...],
+            ...: ...,
+        }
+    )
+
+    assert [obj, {}] != Partial([{"name": "John Doe", "posts": [...], ...: ...}])
+
+    assert [obj] != Partial([{"name": "John Doe", "posts": [...], ...: ...}, {}])
 
 
 def test_sets():
@@ -323,43 +275,55 @@ def test_sets():
 
 def test_dict_values():
     obj = {
-        'id': 42,
-        'name': 'John Doe',
-        'email': 'john@gmail.com',
+        "id": 42,
+        "name": "John Doe",
+        "email": "john@gmail.com",
     }
 
-    assert obj == Partial({
-        ...: 42,
-        'name': 'John Doe',
-        'email': 'john@gmail.com',
-    })
+    assert obj == Partial(
+        {
+            ...: 42,
+            "name": "John Doe",
+            "email": "john@gmail.com",
+        }
+    )
 
-    assert obj == Partial({
-        'id': 42,
-        'name': 'John Doe',
-        ...: 'john@gmail.com',
-    })
+    assert obj == Partial(
+        {
+            "id": 42,
+            "name": "John Doe",
+            ...: "john@gmail.com",
+        }
+    )
 
-    assert obj != Partial({
-        'id': 42,
-        ...: 'john@gmail.com',
-    })
+    assert obj != Partial(
+        {
+            "id": 42,
+            ...: "john@gmail.com",
+        }
+    )
 
-    assert obj != Partial({
-        'id': 42,
-        'name': 'John Doe',
-        'posts': [1, 2, 3],
-        ...: 'john@gmail.com',
-    })
+    assert obj != Partial(
+        {
+            "id": 42,
+            "name": "John Doe",
+            "posts": [1, 2, 3],
+            ...: "john@gmail.com",
+        }
+    )
 
-    assert obj == Partial({
-        'id': 42,
-        'name': ...,
-        ...: 'john@gmail.com',
-    })
+    assert obj == Partial(
+        {
+            "id": 42,
+            "name": ...,
+            ...: "john@gmail.com",
+        }
+    )
 
-    assert obj == Partial({
-        'id': ...,
-        'name': ...,
-        'email': 'john@gmail.com',
-    })
+    assert obj == Partial(
+        {
+            "id": ...,
+            "name": ...,
+            "email": "john@gmail.com",
+        }
+    )

@@ -38,9 +38,8 @@ def matches(obj: Matchable, partial: Matchable) -> bool:
         else:
             return partial == obj
 
-    elif (
-        (isinstance(partial, list) and isinstance(obj, list)) or
-        (isinstance(partial, tuple) and isinstance(obj, tuple))
+    elif (isinstance(partial, list) and isinstance(obj, list)) or (
+        isinstance(partial, tuple) and isinstance(obj, tuple)
     ):
         obj_idx = 0
         for idx, el in enumerate(partial):
@@ -49,7 +48,7 @@ def matches(obj: Matchable, partial: Matchable) -> bool:
                     return True
 
                 for i2 in range(obj_idx, len(obj)):
-                    if matches(obj[i2:], partial[idx + 1:]):
+                    if matches(obj[i2:], partial[idx + 1 :]):
                         return True
 
                 return False
